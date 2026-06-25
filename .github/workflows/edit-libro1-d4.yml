@@ -1,0 +1,25 @@
+name: Edit Libro1 D4
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  edit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python -m pip install openpyxl
+      - run: |
+          python -c "from openpyxl import load_workbook; wb=load_workbook('Libro1.xlsx'); ws=wb.active; ws['D4']='hi'; wb.save('Libro1.xlsx')"
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add Libro1.xlsx
+          git commit -m "Set D4 to hi" || exit 0
+          git push
